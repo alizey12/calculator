@@ -1,11 +1,11 @@
 let displayValue = '';
-let isResultDisplayed = false;
+let isResultDisplayed = false; // Flag to track if the result is displayed
 
 function appendValue(value) {
     if (isResultDisplayed) {
         displayValue = value;
         isResultDisplayed = false;
-    } else if (displayValue === '0' || displayValue === 'No input provided' || displayValue === 'Invalid input') {
+    } else if (displayValue === '0' || displayValue === 'Error') {
         displayValue = value;
     } else {
         displayValue += value;
@@ -14,7 +14,7 @@ function appendValue(value) {
 }
 
 function operate(operator) {
-    if (displayValue === 'No input provided' || displayValue === 'Invalid input') return;
+    if (displayValue === 'Error') return;
 
     isResultDisplayed = false;
 
@@ -35,23 +35,16 @@ function clearDisplay() {
 
 function calculate() {
     try {
-        if (!displayValue.trim()) {
-            throw new Error("No input provided");
-        }
-
-        // Check for invalid expressions (e.g., ending with an operator)
-        const lastChar = displayValue.trim().slice(-1);
-        if ('+-*/'.includes(lastChar)) {
-            throw new Error("Invalid input");
-        }
-
         // Evaluate the expression
         let result = eval(displayValue);
-        result = Math.round((result + Number.EPSILON) * 100000000) / 100000000; // Fix floating-point issues
+
+        // Fix floating-point precision errors
+        result = Math.round((result + Number.EPSILON) * 100000000) / 100000000; // Rounding to 8 decimal places
+
         displayValue = result.toString();
         isResultDisplayed = true;
-    } catch (error) {
-        displayValue = error.message; // Display meaningful error messages
+    } catch {
+        displayValue = 'Error';
         isResultDisplayed = false;
     }
     updateDisplay();
