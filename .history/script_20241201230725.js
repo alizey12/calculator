@@ -39,7 +39,7 @@ function calculate() {
             throw new Error("No input provided");
         }
 
-        // Check for invalid expressions 
+        // Check for invalid expressions (e.g., ending with an operator)
         const lastChar = displayValue.trim().slice(-1);
         if ('+-*/'.includes(lastChar)) {
             throw new Error("Invalid input");
